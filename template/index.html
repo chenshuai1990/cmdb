@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block container %}
+    <div class="container-fluid">
+
+
+            <!-- end upper main stats -->
+
+            <div id="pad-wrapper">
+
+                <!-- statistics chart built with jQuery Flot -->
+                <div class="row-fluid chart">
+                    <h4>
+                        Statistics
+                         <div class="btn-group pull-right">
+                            <button class="glow left">DAY</button>
+                            <button class="glow middle active">MONTH</button>
+                            <button class="glow right">YEAR</button>
+                        </div>
+                    </h4>
+                    <div class="span12">
+                        <div id="statsChart"></div>
+                    </div>
+                </div>
+                <!-- end statistics chart -->
+
+
+
+
+            </div>
+        </div>
+{% endblock %}

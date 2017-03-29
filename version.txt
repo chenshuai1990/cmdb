@@ -1,0 +1,2 @@
+2017年3月28日
+1、完成api、log、hardware、home的页面继承
