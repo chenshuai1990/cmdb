@@ -1,17 +1,32 @@
 {% extends "basesign.html" %}
 
 
+{% block css %}
+
+{% endblock %}
+
 {% block sign %}
 
 <div class="box">
             <div class="content-wrap">
                 <h6>注 册</h6>
                 <form action="" method="post">
-                    <input class="span12" type="text" placeholder="用户名" />
-                    <input class="span12" type="password" placeholder="密码" />
-                    <input class="span12" type="password" placeholder="确认密码" />
+                    <div>
+                        <input class="span12" type="text" id="username" name="username" placeholder="用户名" />
+                        <span class="errorlist" style="color:indianred;"></span>
+                    </div>
+                    <div>
+                        <input class="span12" type="password" id="password" name="password" placeholder="密码" />
+                        <span class="errorlist" style="color:indianred;"></span>
+                    </div>
+                    <div>
+                        <input class="span12" type="password" id="again" name="again" placeholder="确认密码" />
+                        <span class="errorlist" style="color:indianred;"></span>
+                    </div>
+
                     <div class="action">
-                        <a class="btn-glow primary login" href="#">注册</a>
+
+                        <input id="submits" type="submit" value="注 册" class="btn-glow primary login">
                     </div>
                  </form>
             </div>
@@ -21,4 +36,342 @@
             <p>已有账户?</p>
             <a href="/mycmdb/login">登录</a>
         </div>
+{% endblock %}
+
+{% block js %}
+<script>
+        $(
+                function(){
+                    //定义表单数据标志
+                    var ok1=false;
+                    var ok2=false;
+                    var ok3=false;
+
+
+                    //默认禁用submit按钮
+                   // $("#submits").attr("disabled",true)
+
+                    //定义启动与禁用submit函数
+                    function submits(blurs) {
+                        if(blurs == true){
+                            $("#submits").attr("disabled",true)
+                        }else if(blurs == false){
+                            $("#submits").removeAttr("disabled")
+                        }
+                    }
+
+                    //定义启用与禁用第二个密码输入框
+                    function again_password(flag){
+                        if(flag==true){$("#again").attr("disabled","disabled");}
+                        else{$("#again").removeAttr("disabled");}
+                    }
+
+
+                    //定义用户名合法性验证方法
+                    function checkUser(){
+                        var username = $.trim($("#username").val());
+                        if(username==''){
+                            return 0;
+                        }else if (/^\d.*$/.test(username)){
+                            //用户名不能以数字开头
+                            return -1;
+                        }else if(username.length<3||username.length>18){
+                            //合法长度为3-18个字符
+                            return -2;
+                        }
+                        else if(!(/^\w+$/.test(username))){
+                            //用户名只能包含数字字母下划线
+                            return -3;
+                        }else if(!(/^[a-zA-Z]\w+$/.test(username))){
+                            //用户名只能英文字母开头
+                            return -4;
+                        }
+                        return 1;
+
+
+
+                    }
+
+                    //定义密码合法性验证方法
+                    function checkPasswd(recvdata){
+                        var data = recvdata;
+                        if(data==''){
+                            //密码不能为空
+                            return 0;
+                        }
+                        else if(data.length<3||data.length>18){
+                            //合法长度为3-18个字符
+                            return -1;
+                        }
+                        else if(!(/^\S+$/.test(data))){
+                            //密码除空格以外均允许
+                            return -2;
+                        }
+                        return 1;
+                    }
+
+                    //定义密码是否一致验证方法
+                    function checkpasswdisconsistent(num1,num2){
+                        if (num1==num2){
+                            $('#password').siblings("span.errorlist").text("");
+                            $('#again').siblings("span.errorlist").text("");
+                            return true;
+                        }
+                        else{
+                            $('#password').siblings("span.errorlist").text("两次密码输入不一致");
+                            $('#again').siblings("span.errorlist").text("两次密码输入不一致");
+                            return false;
+                        }
+                    }
+
+
+
+                    //验证用户名是否重复，使用ajax请求
+                    $("#username").blur(
+                            function(){
+                                var username = $(this).val();
+                                if(username){
+
+                                    $.ajax(
+                                            {
+                                                url:"http://127.0.0.1:8000/mycmdb/userValid",
+                                                type:"post",
+                                                data:{"user":username},
+                                                beforeSend:function(){},
+                                                async:true,
+                                                success:function(data){
+
+                                                    if(data['valid']== "error") {
+
+                                                        $('#username').siblings("span.errorlist").text("用户名不能重复");
+
+
+                                                        }
+                                                        /*
+                                                     else{
+                                                        $('#username').siblings("span.errorlist").text("");
+                                                        submits(true);
+
+                                                        }*/
+
+                                                },
+                                                error:function(error){
+                                                    console.log(error)
+                                                }
+                                            }
+                                    );
+
+                                }
+                                else{$('#username').siblings("span.errorlist").text("用户名不能为空");}
+                            }
+                    );
+
+
+                    //验证用户名是否合法
+                    $("#username").blur(
+                            function () {
+                                ok1 = false;
+                                var returnNum = checkUser();
+                                console.log(returnNum);
+                                if(returnNum==0){
+                                    $('#username').siblings("span.errorlist").text("用户名不可以为空");
+
+                                }else if (returnNum==-1){
+                                    $('#username').siblings("span.errorlist").text("用户名不能以数字开头");
+
+                                }else if(returnNum==-2){
+                                    $('#username').siblings("span.errorlist").text("用户名长度为3-18个字符");
+                                }else if(returnNum==-3){
+                                    $('#username').siblings("span.errorlist").text("用户名只能包含字母、数字、下划线");
+                                }else if(returnNum==-4){
+                                    $('#username').siblings("span.errorlist").text("用户名只能以英文字母开头");
+                                }else{
+                                    $('#username').siblings("span.errorlist").text("");
+                                    ok1 = true;
+
+                                }
+
+
+
+
+                            }
+
+                    );
+
+
+
+                    //验证密码是否一致
+                    //第一次密码失焦判断，如果第一个密码为空，则禁用第二个密码框
+
+                    $("#password").blur(
+
+                            function(){
+                            var pawd = $("#password").val();
+                            var again_pawd = $("#again").val();
+                            //alert(pawd+again_pawd)
+                            if(pawd){
+                                again_password(false);
+                                $('#password').siblings("span.errorlist").text("");
+
+
+                                }
+                            else{
+                                again_password(true);
+                                $('#password').siblings("span.errorlist").text("密码不可以为空");
+                                //alert("密码不可以为空");
+                                again_password(true);
+
+
+                            }
+                        }
+                    )
+
+
+                    //第二次输入密码失焦判断密码是否一致
+{#                    $("#again").blur(#}
+{#                            function() {#}
+{#                                var pawd = $("#password").val();#}
+{#                                var again_pawd = $("#again").val();#}
+{#                                if (pawd == again_pawd) {#}
+{##}
+{##}
+{#                                    $('#password').siblings("span.errorlist").text("");#}
+{#                                    $('#again').siblings("span.errorlist").text("");#}
+{#                                }#}
+{#                                else {#}
+{#                                    $('#password').siblings("span.errorlist").text("两次密码输入不一致");#}
+{#                                    $('#again').siblings("span.errorlist").text("两次密码输入不一致");#}
+{#                                    //alert("两次密码输入不一致");#}
+{##}
+{#                                }#}
+{#                            }#}
+{#                    )#}
+
+
+
+                    //验证第一个密码输入框的密码是否合法及密码是否一致
+                    $("#password").blur(
+                            function(){
+                                var data = $(this).val();
+                                var dataagain = $('#again').val();
+                                var returnNum = checkPasswd(data);
+                                if (checkpasswdisconsistent(data,dataagain)) {
+                                    if (returnNum == 0) {
+                                        $('#password').siblings("span.errorlist").text("密码不能为空");
+
+                                    }
+                                    else if (returnNum == -1) {
+                                        $('#password').siblings("span.errorlist").text("密码长度为3-18个字符");
+                                    }
+                                    else if (returnNum == -2) {
+                                        $('#password').siblings("span.errorlist").text("密码中不可以使用空格");
+                                    }
+                                    else {
+                                        $('#password').siblings("span.errorlist").text("");
+                                        ok2 = true;
+                                    }
+
+                                }
+                                else{
+                                    ok2 = false;
+                                    ok3 = false;
+                                }
+
+
+                            }
+
+                    );
+
+
+                    //验证第二个密码输入框的密码是否合法及密码是否一致
+                    $("#again").blur(
+                            function(){
+                                var data = $(this).val();
+                                var datapasswd = $('#password').val();
+                                var returnNum = checkPasswd(data);
+                                if (checkpasswdisconsistent(data,datapasswd)) {
+                                    if (returnNum == 0) {
+                                        $('#again').siblings("span.errorlist").text("密码不能为空");
+                                    }
+                                    else if (returnNum == -1) {
+                                        $('#again').siblings("span.errorlist").text("密码长度为3-18个字符");
+                                    }
+                                    else if (returnNum == -2) {
+                                        $('#again').siblings("span.errorlist").text("密码中不可以使用空格");
+                                    }
+                                    else {
+                                        $('#again').siblings("span.errorlist").text("");
+                                        ok3 = true;
+                                    }
+                                }
+                                else{
+                                    ok2 = false;
+                                    ok3 = false;
+                                }
+
+                            }
+
+                    );
+
+
+
+
+
+
+
+                    //验证form表单的提交
+                    $("#submits").click(
+                            function(){
+                                $('input').blur();
+                                if(ok1 && ok2 && ok3){
+                                    $('form').submit();
+                                    alert("用户注册成功！即将跳转至登录界面。")
+                                }
+                                else{
+                                    alert("用户注册失败！")
+                                    return false;
+
+                                }
+
+
+
+                        }
+
+                    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                }
+        )
+    </script>
 {% endblock %}

@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'API',
     'Hardware',
     'Log',
+    'User',
 )
 
 MIDDLEWARE_CLASSES = (
