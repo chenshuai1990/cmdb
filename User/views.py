@@ -1,5 +1,5 @@
 #coding:utf-8
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response,render
 from django.http import HttpResponseRedirect,JsonResponse
 from models import User
 import time
@@ -19,7 +19,7 @@ def register(request):
 def r404(request):
     return render_to_response("404.html",locals())
 
-
+#登录
 def userlogin(request):
     if request.method == "POST"  and request.POST:
         username = request.POST["username"]
@@ -27,6 +27,7 @@ def userlogin(request):
         hash = hashlib.md5()
         hash.update(password)
         password = hash.hexdigest()
+        error=''
         try:
             user = User.objects.get(username=username)
             if user.password == password:
@@ -35,11 +36,51 @@ def userlogin(request):
                 request.session["username"] = username+time.strftime("%H:%M:%S")
                 return response
             else:
-                return HttpResponseRedirect("/User/login")
+                error = "用户名或密码错误."
+                return render_to_response('userTemplate/login.html', locals())
         except:
-            return HttpResponseRedirect("/User/login")
+            return HttpResponseRedirect("/user/login")
     else:
-        return render_to_response('login.html',locals())
+        return render_to_response('userTemplate/login.html',locals())
+
+def userLogin(request):
+    if request.method == "POST"  and request.POST:
+        statue = {"valid":'error'}
+        try:
+            username = request.POST.get('user')
+            passord = request.POST.get('passwd')
+            hash = hashlib.md5()
+            hash.update(passord)
+            password = hash.hexdigest()
+            user = User.objects.get(username=username)
+            if user.password == password:
+                response = HttpResponseRedirect("/index")
+                response.set_cookie("username",username,600)
+                request.session["username"] = username+time.strftime("%H:%M:%S")
+                return response
+            else:
+                return HttpResponseRedirect("/user/login")
+        except:
+            return HttpResponseRedirect("/user/login")
+    else:
+        return render_to_response('userTemplate/login.html',locals())
+
+#判断登录用户是否存在
+def userValidLogin(request):
+    if request.method == 'POST' and request.POST:
+        statue = {"valid": 'error'}
+        try:
+            username = request.POST.get('user')
+            object = User.objects.filter(username = username)
+            if object:
+                statue["valid"] = 'success'
+        except:
+            pass
+        return JsonResponse(statue)
+    else:
+        return HttpResponseRedirect("/user/login")
+
+
 
 #表单数合法性验证
 def data_isvalid(username, password, again):
@@ -88,7 +129,7 @@ def register(request):
             u.username = username
             u.password = password
             u.save()
-            return HttpResponseRedirect("/mycmdb/login")
+            return HttpResponseRedirect("/user/login")
         else:
             return render_to_response('userTemplate/register.html', locals())
     else:
@@ -107,7 +148,10 @@ def userValid(request):
             pass
         return JsonResponse(statue)
     else:
-        return HttpResponseRedirect("/mycmdb/register")
+        return HttpResponseRedirect("/user/register")
+
+
+
 
 
 

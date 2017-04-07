@@ -34,7 +34,7 @@
 
         <div class="span4 no-account">
             <p>已有账户?</p>
-            <a href="/mycmdb/login">登录</a>
+            <a href="/user/login">登录</a>
         </div>
 {% endblock %}
 
@@ -134,7 +134,7 @@
 
                                     $.ajax(
                                             {
-                                                url:"http://127.0.0.1:8000/mycmdb/userValid",
+                                                url:"http://127.0.0.1:8000/user/userValid",
                                                 type:"post",
                                                 data:{"user":username},
                                                 beforeSend:function(){},
@@ -227,25 +227,7 @@
                     )
 
 
-                    //第二次输入密码失焦判断密码是否一致
-{#                    $("#again").blur(#}
-{#                            function() {#}
-{#                                var pawd = $("#password").val();#}
-{#                                var again_pawd = $("#again").val();#}
-{#                                if (pawd == again_pawd) {#}
-{##}
-{##}
-{#                                    $('#password').siblings("span.errorlist").text("");#}
-{#                                    $('#again').siblings("span.errorlist").text("");#}
-{#                                }#}
-{#                                else {#}
-{#                                    $('#password').siblings("span.errorlist").text("两次密码输入不一致");#}
-{#                                    $('#again').siblings("span.errorlist").text("两次密码输入不一致");#}
-{#                                    //alert("两次密码输入不一致");#}
-{##}
-{#                                }#}
-{#                            }#}
-{#                    )#}
+
 
 
 

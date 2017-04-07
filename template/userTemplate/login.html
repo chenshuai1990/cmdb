@@ -6,20 +6,295 @@
             <div class="content-wrap">
                 <h6>登 录</h6>
                 <form action="" method="post">
-                    <input class="span12" type="text" placeholder="用户名" />
-                    <input class="span12" type="password" placeholder="密码" />
+                    <div>
+                        <input class="span12" type="text" name="username" id="username" placeholder="用户名" />
+                        <span class="errorlist" style="color:indianred;"></span>
+                    </div>
+                    <div>
+                        <input class="span12" type="password" name="password" id="password" placeholder="密码" />
+                        <span class="errorlist" style="color:indianred;">{{ error }}</span>
+                    </div>
                     <a href="#" class="forgot">忘记密码?</a>
                     <div class="remember">
                         <input id="remember-me" type="checkbox" />
                         <label for="remember-me">记住我</label>
                     </div>
-                    <a class="btn-glow primary login" href="/index">登录</a>
+
+
+                    <input id="submits" type="submit" value="登录" class="btn-glow primary login" href="/index">
                 </form>
              </div>
         </div>
 
         <div class="span4 no-account">
             <p>你还没有账号?</p>
-            <a href="/mycmdb/register">注册</a>
+            <a href="/user/register">注册</a>
         </div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+    $(
+            function(){
+                //定义标志位
+                var ok1=false;
+                var ok2=false;
+
+
+                //定义用户名合法性验证方法
+                    function checkUser() {
+                        var username = $.trim($("#username").val());
+                        if (username == '') {
+                            return 0;
+                        } else if (/^\d.*$/.test(username)) {
+                            //用户名不能以数字开头
+                            return -1;
+                        } else if (username.length < 3 || username.length > 18) {
+                            //合法长度为3-18个字符
+                            return -2;
+                        }
+                        else if (!(/^\w+$/.test(username))) {
+                            //用户名只能包含数字字母下划线
+                            return -3;
+                        } else if (!(/^[a-zA-Z]\w+$/.test(username))) {
+                            //用户名只能英文字母开头
+                            return -4;
+                        }
+                        return 1;
+                    };
+
+
+
+                 //定义密码合法性验证方法
+                    function checkPasswd(recvdata){
+                        var data = recvdata;
+                        if(data==''){
+                            //密码不能为空
+                            return 0;
+                        }
+                        else if(data.length<3||data.length>18){
+                            //合法长度为3-18个字符
+                            return -1;
+                        }
+                        else if(!(/^\S+$/.test(data))){
+                            //密码除空格以外均允许
+                            return -2;
+                        }
+                        return 1;
+                    }
+
+
+
+
+
+
+
+                //判断用户名是否存在,使用ajax请求
+                $("#username").blur(
+                            function(){
+                                var username = $(this).val();
+                                if(username){
+
+                                    $.ajax(
+                                            {
+                                                url:"http://127.0.0.1:8000/user/userLogin/",
+                                                type:"post",
+                                                data:{"user":username},
+                                                beforeSend:function(){},
+                                                async:true,
+                                                success:function(data){
+
+                                                    if(data['valid']== "error") {
+
+                                                        $('#username').next().text("用户名不存在");
+
+
+                                                        }
+
+                                                     else{
+
+                                                        $('#username').next().text("");
+
+
+                                                        }
+
+                                                },
+                                                error:function(error){
+                                                    console.log(error)
+                                                }
+                                            }
+                                    );
+
+                                }
+                                else{$('#username').next().text("用户名不能为空");}
+                            }
+                    );
+
+
+                //判断用户名是否合法
+                $("#username").blur(
+                            function () {
+                                ok1 = false;
+                                var returnNum = checkUser();
+                                console.log(returnNum);
+                                if(returnNum==0){
+                                    $('#username').siblings("span.errorlist").text("用户名不可以为空");
+
+                                }else if (returnNum==-1){
+                                    $('#username').siblings("span.errorlist").text("用户名不能以数字开头");
+
+                                }else if(returnNum==-2){
+                                    $('#username').siblings("span.errorlist").text("用户名长度为3-18个字符");
+                                }else if(returnNum==-3){
+                                    $('#username').siblings("span.errorlist").text("用户名只能包含字母、数字、下划线");
+                                }else if(returnNum==-4){
+                                    $('#username').siblings("span.errorlist").text("用户名只能以英文字母开头");
+                                }else{
+                                    $('#username').siblings("span.errorlist").text("");
+                                    ok1 = true;
+
+                                }
+
+
+
+
+                            }
+
+                    );
+
+
+
+
+
+                //判断密码是否合法
+                $("#password").blur(
+                            function(){
+                                ok2 = false;
+                                var data = $(this).val();
+                                var returnNum = checkPasswd(data);
+                                if (data) {
+                                    if (returnNum == 0) {
+                                        $('#password').siblings("span.errorlist").text("密码不能为空");
+
+                                    }
+                                    else if (returnNum == -1) {
+                                        $('#password').siblings("span.errorlist").text("密码长度为3-18个字符");
+                                    }
+                                    else if (returnNum == -2) {
+                                        $('#password').siblings("span.errorlist").text("密码中不可以使用空格");
+                                    }
+                                    else {
+                                        $('#password').siblings("span.errorlist").text("");
+                                        ok2 = true;
+                                    }
+
+                                }
+                                else{
+                                    $('#password').siblings("span.errorlist").text("密码不能为空");
+                                    ok2 = false;
+                                }
+
+
+                            }
+
+                    );
+
+
+
+
+
+
+
+
+                //验证form表单的提交,使用ajax请求
+                    $("#submits").click(
+                            function(){
+                                $('input').blur();
+                                if(ok1 && ok2){
+                                    $('form').submit();
+                                }
+                                else{
+                                    alert("用户登录失败！")
+                                    return false;
+
+                                }
+
+
+
+                        }
+
+                    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    )
+</script>
 {% endblock %}
