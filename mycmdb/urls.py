@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^api/',include("API.urls")),
     url(r'^hardware/',include("Hardware.urls")),
     url(r'^log/',include("Log.urls")),
-    url(r'^user/',include("User.urls"))
+    url(r'^user/',include("User.urls")),
+
 
 ]

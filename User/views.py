@@ -1,10 +1,11 @@
 #coding:utf-8
 from django.shortcuts import render_to_response,render
 from django.http import HttpResponseRedirect,JsonResponse
-from models import User
+from models import *
 import time
 import hashlib
 import re
+from mycmdb.views import *
 
 # Create your views here.
 def login(request):
@@ -30,7 +31,7 @@ def userlogin(request):
         error=''
         try:
             user = User.objects.get(username=username)
-            if user.password == password:
+            if user.password == password and user.status=='T':
                 response = HttpResponseRedirect("/index")
                 response.set_cookie("username",username,600)
                 request.session["username"] = username+time.strftime("%H:%M:%S")
@@ -150,9 +151,68 @@ def userValid(request):
     else:
         return HttpResponseRedirect("/user/register")
 
+#登出
+def logout(request):
+    try:
+        del request.COOKIES["username"]
+        del request.session["username"]
+    except:
+        pass
+    return HttpResponseRedirect("/user/login",locals())
 
+#展示角色列表
+@user_valid
+def permissionPage(request):
+    p= Permission.objects.all()
+    alldata = p
+    return render_to_response('userTemplate/permission.html',locals())
 
+#新增角色
+@user_valid
+def addpermission(request):
+    if request.method == "POST" and request.POST:
+        name = request.POST["pername"]
+        description = request.POST["description"]
+        p = Permission(Name=name,description=description)
+        # p.Name = name
+        # p.description = description
+        p.save()
+        return HttpResponseRedirect('/user/permission/')
+    else:
+        return render_to_response("userTemplate/addpermission.html",locals())
 
+#编辑角色
+@user_valid
+def editpermission(request):
+    return render_to_response('userTemplate/editpermission',locals())
 
+#删除角色
+@user_valid
+def delpermission(request):
+    if request.method == "POST" and request.POST:
+        id = int(request.POST["id"])
+        p = Permission.objects.get(id = id)
+        p.delete()
+        return JsonResponse({"statue":"success"})
+    else:
+        return JsonResponse({"statue":"error"})
 
+#查看个人信息
+@user_valid
+def personal(request):
+    username = request.COOKIES["username"]
+    u = User.objects.filter(username=username)
+    alldata = u
+    return render_to_response('userTemplate/personal.html',locals())
 
+#查看用户列表
+@user_valid
+def userlist(request):
+    u = User.objects.all()
+    alldata = u
+    return render_to_response('userTemplate/userlist.html',locals())
+
+#查看组列表
+@user_valid
+def usergroup(request):
+    return render_to_response('userTemplate/group.html',locals())

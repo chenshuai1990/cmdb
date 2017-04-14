@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block css %}{% endblock %}
 
 {% block addcss %}
@@ -37,12 +38,14 @@
     </style>
 {% endblock %}
 
+
+
 {% block index %}
 <li>
 {% endblock %}
 
 
-{% block hardware %}
+{% block user %}
 <li class = "active">
     <div class="pointer">
         <div class="arrow"></div>
@@ -51,7 +54,7 @@
 {% endblock %}
 
 
-{% block hardblock %}
+{% block userblock %}
     style = "display:block;"
 {% endblock %}
 
@@ -73,7 +76,7 @@
                 <div class="table-wrapper products-table section">
                     <div class="row-fluid head">
                         <div class="span12">
-                            <h4>硬件信息展示</h4>
+                            <h4>角色管理</h4>
                         </div>
                     </div>
 
@@ -87,7 +90,7 @@
                                 </select>
                             </div>
                             <input type="text" class="search" />
-                            <a class="btn-flat success new-product" href="/hardware/addserver/">+ 新增服务器</a>
+                            <a class="btn-flat success new-product" href="/user/addpermission/">+ 新增角色</a>
                         </div>
                     </div>
 
@@ -97,48 +100,33 @@
                                 <tr>
                                     <th class="span3">
                                         <input type="checkbox" />
-                                        主机名
+                                        角色名称
                                     </th>
                                     <th class="span3">
-                                        <span class="line" ></span>IP地址
-                                    </th>
-
-                                    <th class="span3">
-                                        <span class="line"></span>cpu型号
-                                    </th>
-
-                                    <th class="span3">
-                                        <span class="line"></span>系统
+                                        <span class="line" ></span>角色描述
                                     </th>
                                     <th class="span3">
                                         <span class="line"></span>操作
                                     </th>
-
                                 </tr>
                             </thead>
                             <tbody>
 
 
-                                <!--读取后台传递过来的硬件信息-->
-                                {% for server in serverData %}
+                                <!--读取后台传递过来的角色表-->
+                                {% for i in alldata %}
                                     <tr>
                                     <td>
                                         <input type="checkbox" />
-                                        <a href="#" class="name" id="id{{ server.id }}" onclick="getdata(this.id)">{{ server.hostname }}</a>
+                                        <a href="#" class="name">{{ i.Name }}</a>
                                     </td>
                                     <td class="description">
-                                        {{ server.ip }}
-                                    </td>
-                                     <td class="description">
-                                        {{ server.cpu }}
-                                    </td>
-                                     <td class="description">
-                                        {{ server.system }}
+                                        {{ i.description }}
                                     </td>
                                     <td>
                                         <ul class="actions" style="float:left;">
-                                            <li><a  href="/hardware/editserver/{{ server.id }}">查看</a></li>
-                                            <li class="last"><a href="#" id="{{ server.id }}" onclick="del(this.id)">删除</a></li>
+                                            <li><a href="#">编辑</a></li>
+                                            <li class="last"><a href="#" id="{{ i.id }}" onclick="del(this.id)">删除</a></li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -157,18 +145,16 @@
         </div>
 {% endblock %}
 
-
 {% block addjs %}
     <script src="/static/js/jquery-latest.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/theme.js"></script>
     <script>
-    //删除设备
         function del(id){
     $.ajax(
             {
                 type:"post",
-                url:"http://127.0.0.1:8000/hardware/delserver/",
+                url:"http://127.0.0.1:8000/user/delpermission/",
                 data:{"id":id},
                 success:function(data){
                     if(data["statue"] == "success"){
@@ -181,52 +167,6 @@
             }
     )
 }
-
-    //动态获取设备信息
-    function getdata(id){
-            var len = id.length;  //获取id字符串长度
-            console.log(len);
-            var txt=id.substr(2,len);  //通过字符串处理获取硬件设备在数据库中真是的id
-            //alert(txt);
-            $.ajax(
-                    {
-                        type:"post",
-                        url:"http://127.0.0.1:8000/hardware/getdata/",
-                        data:{"id":txt},
-                        success:function(data){
-                            if(data["statue"] == "success"){
-                                window.location.reload()
-                                alert("succes");
-                            }
-                            else{
-                                alert("hhhhh");
-                            }
-                        },
-                        error:function(err){
-                            console.log(err)
-                        }
-                    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            )
-    }
-
-
-
     </script>
 
 {% endblock %}

@@ -4,7 +4,7 @@
 	<title>CMDB管理平台</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+{% block css %}
     <!-- bootstrap -->
     <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
     <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
@@ -31,6 +31,9 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+{% endblock %}
+{% block addcss %}
+{% endblock %}
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
 <body>
 
@@ -153,7 +156,7 @@
                     </a>
                 </li>
                 <li class="settings hidden-phone">
-                    <a href="/user/login" role="button">
+                    <a href="/user/logout" role="button">
                         <i class="icon-share-alt"></i>
                     </a>
                 </li>
@@ -188,7 +191,7 @@
                     <span>硬件管理</span>
                     <i class="icon-chevron-down"></i>
                 </a>
-                <ul class="submenu" {% block hardblovk %}{% endblock %}>
+                <ul class="submenu" {% block hardblock %}{% endblock %}>
                     <li><a href="/hardware/hardwarelist">硬件信息展示</a></li>
                     <li><a href="/hardware/management">硬件远程管理</a></li>
                 </ul>
@@ -212,6 +215,24 @@
                 </a>
             </li>
 
+
+        {% block user %}
+             <li >
+        {% endblock %}
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-sitemap"></i>
+                    <span>用户管理</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu" {% block userblock %}{% endblock %}>
+                    <li><a href="/user/permission">权限管理</a></li>
+                    <li><a href="/user/group">用户组管理</a></li>
+                    <li><a href="/user/userlist">用户列表</a></li>
+                    <li><a href="/user/personal">个人信息</a></li>
+                </ul>
+            </li>
+
+
         </ul>
     </div>
     <!-- end sidebar -->
@@ -234,7 +255,7 @@
         {% endblock %}
     </div>
 
-
+{%  block js %}
 	<!-- scripts -->
     <script src="/static/js/jquery-latest.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
@@ -360,6 +381,8 @@
             });
         });
     </script>
-
+{% endblock %}
+{% block addjs %}
+{% endblock %}
 </body>
 </html>

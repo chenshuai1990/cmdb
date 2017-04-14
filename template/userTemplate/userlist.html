@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+
+{% block css %}{% endblock %}
+
+{% block addcss %}
+    <!-- bootstrap -->
+    <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/static/css/compiled/tables.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+        label{
+            display: inline-block;
+    float: left;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: auto;
+    width: 25%;
+    margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+
+
+{% block index %}
+<li>
+{% endblock %}
+
+
+{% block user %}
+<li class = "active">
+    <div class="pointer">
+        <div class="arrow"></div>
+        <div class="arrow_border"></div>
+    </div>
+{% endblock %}
+
+
+{% block userblock %}
+    style = "display:block;"
+{% endblock %}
+
+{% block container %}
+     <div class="container-fluid">
+            <div id="pad-wrapper" class="users-list">
+                <div class="row-fluid header">
+                    <h3>用户列表</h3>
+                    <div class="span10 pull-right">
+                        <input type="text" class="span5 search" placeholder="Type a user's name..." />
+
+                        <!-- custom popup filter -->
+                        <!-- styles are located in css/elements.css -->
+                        <!-- script that enables this dropdown is located in js/theme.js -->
+                        <div class="ui-dropdown">
+                            <div class="head" data-toggle="tooltip" title="Click me!">
+                                Filter users
+                                <i class="arrow-down"></i>
+                            </div>
+                            <div class="dialog">
+                                <div class="pointer">
+                                    <div class="arrow"></div>
+                                    <div class="arrow_border"></div>
+                                </div>
+                                <div class="body">
+                                    <p class="title">
+                                        Show users where:
+                                    </p>
+                                    <div class="form">
+                                        <select>
+                                            <option />Name
+                                            <option />Email
+                                            <option />Number of orders
+                                            <option />Signed up
+                                            <option />Last seen
+                                        </select>
+                                        <select>
+                                            <option />is equal to
+                                            <option />is not equal to
+                                            <option />is greater than
+                                            <option />starts with
+                                            <option />contains
+                                        </select>
+                                        <input type="text" />
+                                        <a class="btn-flat small">Add filter</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="new-user.html" class="btn-flat success pull-right">
+                            <span>&#43;</span>
+                            NEW USER
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Users table -->
+                <div class="row-fluid table">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="span4 sortable">
+                                    用户名
+                                </th>
+                                <th class="span3 sortable">
+                                    <span class="line"></span>真实姓名
+                                </th>
+                                <th class="span2 sortable">
+                                    <span class="line"></span>手机号码
+                                </th>
+                                <th class="span3 sortable ">
+                                    <span class="line"></span>用户邮箱
+                                </th>
+                                <th class="span2 sortable">
+                                    <span class="line"></span>用户角色
+                                </th>
+                                <th class="span2 sortable">
+                                    <span class="line"></span>性别
+                                </th>
+                                <th class="span2 sortable">
+                                    <span class="line"></span>QQ
+                                </th>
+                                <th class="span2 sortable">
+                                    <span class="line"></span>用户状态
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                        <!--从后台读取用户列表-->
+                        {% for i in alldata %}
+                            <tr>
+                            <td>
+
+                                <span class="subtext">{{ i.username }}</span>
+                            </td>
+                            <td>
+                                {{ i.realname }}
+                            </td>
+                            <td>
+                                {{ i.phone }}
+                            </td>
+                            <td >
+                                {{ i.email }}
+                            </td>
+                            <td>
+
+                                {{ i.role }}
+                            </td>
+                            <td>
+                                {{ i.gendar }}
+                            </td>
+                            <td>
+                                {{ i.qq }}
+                            </td>
+                            <td >
+                                {{ i.statue }}
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination pull-right">
+                    <ul>
+                        <li><a href="#">&#8249;</a></li>
+                        <li><a class="active" href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">&#8250;</a></li>
+                    </ul>
+                </div>
+                <!-- end users table -->
+            </div>
+        </div>
+{% endblock %}
+
+{% block addjs %}
+    <script src="/static/js/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/theme.js"></script>
+    <script>
+        function del(id){
+    $.ajax(
+            {
+                type:"post",
+                url:"http://127.0.0.1:8000/user/delpermission/",
+                data:{"id":id},
+                success:function(data){
+                    if(data["statue"] == "success"){
+                        window.location.reload()
+                    }
+                },
+                error:function(err){
+                    console.log(err)
+                }
+            }
+    )
+}
+    </script>
+
+{% endblock %}

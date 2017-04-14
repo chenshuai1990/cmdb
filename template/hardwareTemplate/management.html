@@ -1,5 +1,42 @@
 {% extends "base.html" %}
 
+{% block css %}{% endblock %}
+
+{% block addcss %}
+    <!-- bootstrap -->
+    <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/static/css/compiled/tables.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+        label{
+            display: inline-block;
+    float: left;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: auto;
+    width: 15%;
+    margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
 {% block index %}
 <li>
 {% endblock %}
@@ -14,6 +51,253 @@
 {% endblock %}
 
 
-{% block hardblovk %}
+{% block hardblock %}
     style = "display:block;"
+{% endblock %}
+
+{% block container %}
+     <div class="skins-nav">
+            <a href="#" class="skin first_nav selected">
+                <span class="icon"></span><span class="text">Default</span>
+            </a>
+            <a href="#" class="skin second_nav" data-file="css/skins/dark.css">
+                <span class="icon"></span><span class="text">Dark skin</span>
+            </a>
+        </div>
+
+        <div class="container-fluid">
+            <div id="pad-wrapper">
+
+                <!-- products table-->
+                <!-- the script for the toggle all checkboxes from header is located in js/theme.js -->
+                <div class="table-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4>硬件远程管理</h4>
+                        </div>
+                    </div>
+
+                    <form />
+                            <div class="row ctrls">
+
+
+                        </div>
+                            <div class="field-box">
+                                <label>主机名:</label>
+                                <input class="span3" type="text" id="host" name="host"/><br>
+                                <label>用户名:</label>
+                                <input class="span3" type="text" id="user" name="user"/><br>
+                                <label>密码:</label>
+                                <input class="span3" type="password" id="passwd" name="passwd"/>
+                                <div class="slider-frame">
+                                    <span data-on-text="ON" data-off-text="OFF" class="slider-button">登录</span>
+                                </div>
+                                <span id="errorMsg" ></span>
+                            </div>
+
+
+
+                            <div class="field-box">
+                                <label>命令:</label>
+                                <input class="span3" type="text" id="command" name="command"/>
+                                <a id ="submit" class="btn-glow inverse">发送命令</a>
+                            </div>
+
+                            <div class="field-box">
+                                <label>返回结果:</label>
+                                <textarea class="span3" rows="4" id="result"></textarea>
+                            </div>
+
+                        </form>
+
+
+                </div>
+                <!-- end products table -->
+
+
+            </div>
+        </div>
+{% endblock %}
+
+
+{% block addjs %}
+	<!-- scripts -->
+    <script src="/static/js/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="/static/js/bootstrap.datepicker.js"></script>
+
+    <!-- call all plugins -->
+    <script src="/static/js/theme.js"></script>
+
+    <!-- initialize this page scripts -->
+    <script src="/static/js/myajax.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            // Inline datepicker
+            $("#inline-datepicker").datepicker();
+
+
+
+            // jQuery UI Sliders
+            $(".slider-sample1").slider({
+                value: 100,
+                min: 1,
+                max: 500
+            });
+            $(".slider-sample2").slider({
+                range: "min",
+                value: 130,
+                min: 1,
+                max: 500
+            });
+            $(".slider-sample3").slider({
+                range: true,
+                min: 0,
+                max: 500,
+                values: [ 40, 170 ],
+            });
+
+
+
+
+
+            // Switch slide buttons
+            $('.slider-button').click(function() {
+                if ($(this).hasClass("on")) {
+                    // 登录服务器
+{#                    $(this).removeClass('on').text("登录");#}
+                    logout()
+
+
+
+
+
+
+
+
+                } else {
+{#                    $(this).addClass('on').text("登出");#}
+                    login();
+                }
+            });
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+                var all_url = "http://{{ request.get_host }}/";
+
+    //登录服务器
+    function login(){
+                            var url = all_url+"hardware/login/";
+                            var host = $("#host").val();
+                            var user = $("#user").val();
+                            var passwd = $("#passwd").val();
+
+                            myAjax(
+
+                                        url,
+                                        {
+                                            "host":host,
+                                            "user":user,
+                                            "passwd":passwd,
+                                        },
+                                        function(data){
+                                            var statue = data["statue"];
+                                            if(statue == "success"){
+                                                $('.slider-button').addClass('on').text("登出")
+{#                                                $('.slider-button').removeClass('on').text("登录");#}
+                                                $("#errorMsg").text("登录成功")
+                                            }else{
+                                                $("#errorMsg").text(statue)
+                                            }
+                                        },
+                                        function(error){
+                                            console.log(error)
+                                        }
+
+                            )
+                        }
+
+
+
+
+    //登录服务器
+    function logout(){
+                            var url = all_url+"hardware/logout/";
+                            myAjax(
+                                        url,
+                                        {},
+                                        function(data){
+                                            var statue = data["statue"];
+                                            $('.slider-button').removeClass('on').text("登录");
+                                            $("#errorMsg").text(statue);
+                                            $("#result").text("");
+                                        },
+                                        function(error){
+                                            console.log(error)
+                                        }
+
+                            )
+                        }
+
+
+
+
+
+
+    //执行命令
+    $("#submit").click(
+                      function(){
+                        var url = all_url+"hardware/doCommand/";
+                        var command = $("#command").val();
+                        if(command){
+                            myAjax(
+                                url,
+                                {"command":command},
+                                function(data){
+                                    console.log(data);
+                                    $("#result").text(data["result"])
+                                    for(var res in data["result"]){
+                                        var results = data["result"][res].replace("[01;34m","")
+                                        console.log(results)
+                                    }
+                                },
+                                function(error){
+                                    console.log(error);
+                                }
+                            );
+                        }
+                      }
+                    );
+
+
+
+    </script>
+
+
 {% endblock %}

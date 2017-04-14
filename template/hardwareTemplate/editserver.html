@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+
+{% block css %}{% endblock %}
+
+{% block addcss %}
+    <!-- bootstrap -->
+    <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/static/css/compiled/tables.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+        label{
+            display: inline-block;
+    float: left;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: auto;
+    width: 25%;
+    margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+
+
+
+
+
+{% block index %}
+<li>
+{% endblock %}
+
+
+{% block hardware %}
+<li class = "active">
+    <div class="pointer">
+        <div class="arrow"></div>
+        <div class="arrow_border"></div>
+    </div>
+{% endblock %}
+
+
+{% block hardblock %}
+    style = "display:block;"
+{% endblock %}
+
+
+
+{% block container %}
+<div class="container-fluid">
+            <div class='span8' id="pad-wrapper">
+
+                <!-- products table-->
+                <!-- the script for the toggle all checkboxes from header is located in js/theme.js -->
+                <div class="able-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4>硬件信息展示</h4>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="icon-lightbulb "></i>
+                        <strong>查看服务器详细信息</strong>
+
+                    </div>
+
+                    <div class="step-pane" id="step2">
+                                <div class="row-fluid form-wrapper">
+                                    <div class="span8">
+
+                                            <div class="field-box">
+                                                <label>主机名：</label>
+
+                                                <input class="span8" type="text" value="{{ serverdata.hostname }}"/>
+                                            </div>
+                                            <div class="field-box">
+                                                <label>IP地址：</label>
+                                                <input class="span8" type="text" value="{{ serverdata.ip }}"/>
+                                            </div>
+                                            <div class="field-box">
+                                                <label>物理地址：</label>
+                                                <input class="span8" type="text" value="{{ serverdata.Mac }}"/>
+                                            </div>
+                                            <div class="field-box">
+                                                <label>CPU：</label>
+                                                <input class="span8" type="text" value="{{ serverdata.cpu }}"/>
+                                            </div>
+                                            <div class="field-box">
+                                                    <label>内存：</label>
+                                                    <input class="span8" type="text" value="{{ serverdata.Mem }}"/>
+                                            </div>
+                                            <div class="field-box">
+                                                <label>磁盘：</label>
+                                                <input class="span8" type="text" value="{{ serverdata.Disk }}">
+                                            </div>
+                                            <div class="field-box">
+                                                    <label>系统：</label>
+                                                    <input class="span8" type="text" value="{{ serverdata.system }}"/>
+                                            </div>
+                                            <div class="field-box">
+                                                    <label>IO：</label>
+                                                    <input class="span8" type="text" value="{{ serverdata.IO }}"/>
+                                            </div>
+                                        <div class="field-box">
+                                                    <label>上次登录时间：</label>
+                                                    <input class="span8" type="text" value="{{ serverdata.lastLogin }}"/>
+                                            </div>
+                                        <div class="field-box">
+                                                    <label>上次登录用户：</label>
+                                                    <input class="span8" type="text" value="{{ serverdata.lastLoginUser }}"/>
+                                            </div>
+                                        <div class="field-box">
+                                                    <label>是否被激活：</label>
+                                                    <input class="span8" type="text" value="{{ serverdata.isActive }}"/>
+                                            </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                </div>
+                <!-- end products table -->
+
+
+
+
+            </div>
+{% endblock %}
+
+
+{% block js %}
+{% endblock %}
+
+
+{% block addjs %}
+    <script src="/static/js/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/theme.js"></script>
+
+{% endblock %}

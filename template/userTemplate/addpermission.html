@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+
+{% block css %}{% endblock %}
+
+{% block addcss %}
+    <!-- bootstrap -->
+    <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/static/css/compiled/tables.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+        label{
+            display: inline-block;
+    float: left;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: auto;
+    width: 25%;
+    margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+
+
+{% block index %}
+<li>
+{% endblock %}
+
+
+{% block user %}
+<li class = "active">
+    <div class="pointer">
+        <div class="arrow"></div>
+        <div class="arrow_border"></div>
+    </div>
+{% endblock %}
+
+
+{% block userblock %}
+    style = "display:block;"
+{% endblock %}
+
+
+
+{% block container %}
+<div class="container-fluid">
+            <div class='span8' id="pad-wrapper">
+
+                <!-- products table-->
+                <!-- the script for the toggle all checkboxes from header is located in js/theme.js -->
+                <div class="able-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4>权限管理</h4>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="icon-lightbulb "></i>
+                        <strong>新增权限</strong>
+
+                    </div>
+
+                    <form action="" method="post">
+                        <div class="field-box">
+                            <label class="">权限名称：</label>
+                            <input class="span5 inline-input" type="text" name="pername" />
+                        </div>
+                        <div class="field-box">
+                            <label>权限描述：</label>
+                            <input class="span5 inline-input" type="text" name="description" />
+                        </div>
+
+                        <div class="span6 field-box actions">
+                            <input type="submit" class="btn-glow primary" id="submits" value="保存并新增" />
+
+
+                        </div>
+                    </form>
+
+                </div>
+                <!-- end products table -->
+
+
+
+
+            </div>
+{% endblock %}
+
+
+{% block js %}
+{% endblock %}
+
+
+{% block addjs %}
+    <script src="/static/js/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/theme.js"></script>
+
+{% endblock %}
