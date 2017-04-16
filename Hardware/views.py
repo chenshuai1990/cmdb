@@ -93,20 +93,74 @@ def savedata(request):
         result = {"statue":"error"}
     return JsonResponse(result)
 
-
-def getdata(request):
+#更新硬件信息
+@user_valid
+def getdata(request,sid):
     result = {"statue":""}
-    if request.method == "POST" and  request.POST:
-        sid = request.POST.get("id")
-        Sid = int(sid)
-        s = Servers.objects.get(id = Sid)
-        sip = s.ip
-        result["statue"] = "success"
-    else:
-        result["statue"] = "fail"
+    try:
+        if request.method == "POST" and  request.POST:
+            sid = request.POST.get("id")   #从前端获取ID
+            Sid = int(sid)
+            s = Servers.objects.get(id = Sid)  #根据ID查找该设备的IP信息
+            sip = s.ip
+            eq = Equipment.objects.get(ip=sip)  #根据IP在设备登录表中查找账户密码信息
+            ip = eq.ip
+            usrname = eq.uname
+            passwd = eq.passwd
+            p = MyClient(ip,usrname,passwd)
+            recv = p.updateserver(sid)
+            if recv !="error":
+                Recv = recv.splitlines()[:-1]
+                Recv = eval(Recv[0])
+                result["statue"] = Recv["statue"]
+            else:
+                result["statue"] = "error"
+        else:
+            result["statue"] = "error"
+    except Exception as e:
+        print e
     return  JsonResponse(result)
 
-#=========================硬件远程管理===================================
+#远程传输数据的接口
+def updatedata(request,sid):
+    result = {"statue": ""}
+    if request.method == "POST" and request.POST:
+        Sid = int(sid)
+        host = request.POST["host"]
+        ip = request.POST["ip"]
+        mac = request.POST["mac"]
+        cpu = request.POST["cpu"]
+        mem = request.POST["mem"]
+        fdisk = request.POST["fdisk"]
+        osy = request.POST["os"]
+        io = request.POST["io"]
+        lastlogin = request.POST["lasttime"]
+        lastuser = request.POST["lastuser"]
+        isactive = "T"
+        serverdata = Servers.objects.get(id = Sid)
+        if serverdata.IO == io:
+            result = {"statue":"no need to update"}
+        else:
+            serverdata.hostname = host
+            serverdata.ip = ip
+            serverdata.Mac = mac
+            serverdata.cpu = cpu
+            serverdata.Mem = mem
+            serverdata.Disk = fdisk
+            serverdata.system = osy
+            serverdata.IO = io
+            serverdata.lastLogin = datetime.datetime.now()
+            serverdata.lastLoginUser = lastuser
+            serverdata.isActive = isactive
+            serverdata.save()
+            result = {"statue": "success"}
+    else:
+        result = {"statue": "error"}
+    return JsonResponse(result)
+
+
+
+#=========================硬件远程操作==================================
 
 #远程控制页面
 @user_valid
@@ -115,16 +169,7 @@ def management(request):
 
 
 
-def doCommand(request):
-    if request.method == "POST" and request.POST:
-        command = request.POST.get("command")
-        global m
-        if m:
-            result = m.docommand(command) #调用我们写好的执行方法
-        else:
-            result = "error"
-        return JsonResponse({'result':result})# 这个返回值是在if判断成立以后执行的
-    return JsonResponse({"name":"cindy"}) #是if判断失败执行的
+
 
 m = None #定义一个全局变量 m 值为None
 def login(request):
@@ -155,3 +200,24 @@ def logout(request):
     return JsonResponse({"statue":statue})
 
 
+def doCommand(request):
+    if request.method == "POST" and request.POST:
+        command = request.POST.get("command")
+        global m
+        if m:
+            result = m.docommand(command) #调用我们写好的执行方法
+        else:
+            result = "error"
+        return JsonResponse({'result':result})# 这个返回值是在if判断成立以后执行的
+    return JsonResponse({"name":"cindy"}) #是if判断失败执行的
+
+
+
+
+
+
+
+
+#=========================服务远程操作==================================
+def operation(request):
+    return render_to_response("hardwareTemplate/operation.html",locals())

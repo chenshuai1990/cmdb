@@ -17,3 +17,7 @@ class Servers(models.Model):
 
 
 
+class Equipment(models.Model):
+    ip = models.CharField(max_length=32,verbose_name="IP")
+    uname = models.CharField(max_length=32,verbose_name="管理员账户")
+    passwd= models.CharField(max_length=32,verbose_name="账户密码")

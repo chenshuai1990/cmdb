@@ -188,21 +188,28 @@
             console.log(len);
             var txt=id.substr(2,len);  //通过字符串处理获取硬件设备在数据库中真是的id
             //alert(txt);
+
             $.ajax(
                     {
                         type:"post",
-                        url:"http://127.0.0.1:8000/hardware/getdata/",
+                        url:"http://127.0.0.1:8000/hardware/getdata/"+txt+"/",
                         data:{"id":txt},
                         success:function(data){
                             if(data["statue"] == "success"){
-                                window.location.reload()
-                                alert("succes");
+
+                                alert("更新成功");
+                                window.location.reload();
+                            }
+                            else if(data["statue"]== "no need to update"){
+
+                                alert("已是最新");
                             }
                             else{
-                                alert("hhhhh");
+                                alert(data["statue"]);
                             }
                         },
                         error:function(err){
+                            alert("bbb");
                             console.log(err)
                         }
                     }

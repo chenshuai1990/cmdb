@@ -44,6 +44,31 @@ class MyClient:
         # while recv:
         #     recv += self.channel.recv(99999)
         # return recv
+
+    def updateserver(self,sid):
+        self.sid = sid
+        result = ''
+        while True:
+            try:
+                recvdata = self.channel.recv(99999)
+                if "Last login" in recvdata:
+                    command = "python upserver.py "+self.sid+"\n"
+                    self.channel.send(command)
+                else:
+                    pass
+            except Exception as ee:
+                if len(recvdata) == 0:
+                    result =  "error"
+                else:
+                    result = recvdata
+                return result
+        return result
+
+
+
+
+
+
     def __del__(self):
         self.channel.close() #关闭交互界面
         self.ssh.close() #关闭链接
