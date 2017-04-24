@@ -4,7 +4,7 @@ from views import *
 urlpatterns = [
     url(r'hardwarelist/',hardwarelist),
     url(r'management/',management),
-    url(r'operation/',operation),
+    url(r'fdisk/', fdisk),
     url(r'addserver/',addserver),
     url(r'delserver/',delServer),
     url(r'savedata',savedata),
@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'logout/$',logout),
     url(r'doCommand/',doCommand),
     url(r'updatedata/(\w{1,2})/',updatedata),
+    url(r'operation/(\w{1,3})$',operation),
+    url(r'operation/(\w{1,2})/(\w{4,6})', operationserver),
 
 ]
 

@@ -14,12 +14,14 @@ from sshequipment import *
 #查看设备列表
 @user_valid
 def hardwarelist(request):
+    username = request.COOKIES["username"]
     serverData = Servers.objects.all()
     return render_to_response('hardwareTemplate/hardwarelist.html', locals())
 
 #新增硬件设备
 @user_valid
 def addserver(request):
+    username = request.COOKIES["username"]
     if request.method == 'POST' and request.POST:
         s = Servers()
         s.hostname = request.POST["HostName"]
@@ -42,6 +44,7 @@ def addserver(request):
 #删除硬件设备
 @user_valid
 def delServer(request):
+    username = request.COOKIES["username"]
     if request.method == "POST" and request.POST:
         id = int(request.POST["id"])
         server = Servers.objects.get(id = id)
@@ -54,6 +57,7 @@ def delServer(request):
 #编辑硬件设备
 @user_valid
 def editServer(request,sid):
+    username = request.COOKIES["username"]
     Sid = int(sid)
     serverdata = Servers.objects.get(id=Sid)
     return render_to_response('hardwareTemplate/editserver.html',locals())
@@ -165,6 +169,7 @@ def updatedata(request,sid):
 #远程控制页面
 @user_valid
 def management(request):
+    username = request.COOKIES["username"]
     return render_to_response('hardwareTemplate/management.html', locals())
 
 
@@ -189,6 +194,7 @@ def login(request):
         statue = "not fond"
     return JsonResponse({"statue":statue})
 
+@user_valid
 def logout(request):
     global m
     if m:
@@ -205,7 +211,13 @@ def doCommand(request):
         command = request.POST.get("command")
         global m
         if m:
-            result = m.docommand(command) #调用我们写好的执行方法
+            result = m.docommand(command)#调用我们写好的执行方法
+            Result = result[:-1]
+            for i in range(len(Result)):
+                Result[i] = Result[i].replace("01;34","")
+                Result[i] = Result[i].replace("[0m", "")
+            result = Result
+
         else:
             result = "error"
         return JsonResponse({'result':result})# 这个返回值是在if判断成立以后执行的
@@ -219,5 +231,45 @@ def doCommand(request):
 
 
 #=========================服务远程操作==================================
-def operation(request):
+@user_valid
+def operation(request,sid):
+    username = request.COOKIES["username"]
+    if sid=="all":
+        S = Servers.objects.all()
+    else:
+        Sid = int(sid)
+        S = Servers.objects.filter(id = Sid)
+    C = Controlserver.objects.all()
     return render_to_response("hardwareTemplate/operation.html",locals())
+
+def operationserver(request,sid,command):
+    result={"statue":""}
+    if request.method == "POST" and request.POST:
+        Sid = int(sid)
+        S = Servers.objects.get(id  =Sid)
+        ip = S.ip
+        Equip = Equipment.objects.get(ip=ip)
+        username = Equip.uname
+        password = Equip.passwd
+        sername = request.POST["server"]
+        p = MyClient(ip, username, password)
+        recv = p.controlserver(Sid,sername,command)
+        if recv !="error":
+            Recv = recv.splitlines()[:-1]
+            Recve = Recv[0]
+            if Recve:
+                result["statue"] = Recve
+            else:
+                result["statue"] = "Nothing"
+        else:
+            result["statue"] = "error"
+    else:
+        result["statue"] = "error"
+    return JsonResponse(result)
+
+
+
+
+#=========================磁盘清理==================================
+def fdisk(request):
+    return render_to_response("hardwareTemplate/fdisk.html")

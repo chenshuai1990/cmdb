@@ -56,14 +56,7 @@
 {% endblock %}
 
 {% block container %}
-     <div class="skins-nav">
-            <a href="#" class="skin first_nav selected">
-                <span class="icon"></span><span class="text">Default</span>
-            </a>
-            <a href="#" class="skin second_nav" data-file="css/skins/dark.css">
-                <span class="icon"></span><span class="text">Dark skin</span>
-            </a>
-        </div>
+
 
         <div class="container-fluid">
             <div id="pad-wrapper">
@@ -79,6 +72,7 @@
 
                     <div class="row-fluid filter-block">
                         <div class="pull-right">
+                            <!--
                             <div class="ui-select">
                                 <select>
                                   <option />Filter users
@@ -87,6 +81,7 @@
                                 </select>
                             </div>
                             <input type="text" class="search" />
+                            -->
                             <a class="btn-flat success new-product" href="/hardware/addserver/">+ 新增服务器</a>
                         </div>
                     </div>
@@ -139,6 +134,7 @@
                                         <ul class="actions" style="float:left;">
                                             <li><a  href="/hardware/editserver/{{ server.id }}">查看</a></li>
                                             <li class="last"><a href="#" id="{{ server.id }}" onclick="del(this.id)">删除</a></li>
+                                            <li class="last"><a href="/hardware/operation/{{ server.id }}" >服务管理</a></li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -163,12 +159,15 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/theme.js"></script>
     <script>
+
+
+    var all_url = "http://{{ request.get_host }}/";
     //删除设备
         function del(id){
     $.ajax(
             {
                 type:"post",
-                url:"http://127.0.0.1:8000/hardware/delserver/",
+                url:all_url+"hardware/delserver/",
                 data:{"id":id},
                 success:function(data){
                     if(data["statue"] == "success"){
@@ -192,7 +191,7 @@
             $.ajax(
                     {
                         type:"post",
-                        url:"http://127.0.0.1:8000/hardware/getdata/"+txt+"/",
+                        url:all_url+"/hardware/getdata/"+txt+"/",
                         data:{"id":txt},
                         success:function(data){
                             if(data["statue"] == "success"){

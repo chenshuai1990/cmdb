@@ -8,12 +8,7 @@ import re
 from mycmdb.views import *
 
 # Create your views here.
-def login(request):
-    return render_to_response('userTemplate/login.html', locals())
-'''
-def register(request):
-    return render_to_response('userTemplate/register.html', locals())
-'''
+
 
 
 # Create your views here.
@@ -33,7 +28,7 @@ def userlogin(request):
             user = User.objects.get(username=username)
             if user.password == password and user.status=='T':
                 response = HttpResponseRedirect("/index")
-                response.set_cookie("username",username,600)
+                response.set_cookie("username",username,3600)
                 request.session["username"] = username+time.strftime("%H:%M:%S")
                 return response
             else:
@@ -163,6 +158,7 @@ def logout(request):
 #展示角色列表
 @user_valid
 def permissionPage(request):
+    username = request.COOKIES["username"]
     p= Permission.objects.all()
     alldata = p
     return render_to_response('userTemplate/permission.html',locals())
@@ -170,6 +166,7 @@ def permissionPage(request):
 #新增角色
 @user_valid
 def addpermission(request):
+    username = request.COOKIES["username"]
     if request.method == "POST" and request.POST:
         name = request.POST["pername"]
         description = request.POST["description"]
@@ -184,11 +181,13 @@ def addpermission(request):
 #编辑角色
 @user_valid
 def editpermission(request):
+    username = request.COOKIES["username"]
     return render_to_response('userTemplate/editpermission',locals())
 
 #删除角色
 @user_valid
 def delpermission(request):
+    username = request.COOKIES["username"]
     if request.method == "POST" and request.POST:
         id = int(request.POST["id"])
         p = Permission.objects.get(id = id)
@@ -208,6 +207,7 @@ def personal(request):
 #查看用户列表
 @user_valid
 def userlist(request):
+    username = request.COOKIES["username"]
     u = User.objects.all()
     alldata = u
     return render_to_response('userTemplate/userlist.html',locals())
@@ -215,4 +215,5 @@ def userlist(request):
 #查看组列表
 @user_valid
 def usergroup(request):
+    username = request.COOKIES["username"]
     return render_to_response('userTemplate/group.html',locals())

@@ -21,3 +21,7 @@ class Equipment(models.Model):
     ip = models.CharField(max_length=32,verbose_name="IP")
     uname = models.CharField(max_length=32,verbose_name="管理员账户")
     passwd= models.CharField(max_length=32,verbose_name="账户密码")
+
+
+class Controlserver(models.Model):
+    sname = models.CharField(max_length=32,verbose_name="mysql")

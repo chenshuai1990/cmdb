@@ -4,4 +4,5 @@ from mycmdb.views import *
 
 @user_valid
 def index(request):
+    username = request.COOKIES["username"]
     return render_to_response('logTemplate/log.html', locals())

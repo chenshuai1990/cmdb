@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block css %}{% endblock %}
+
+{% block addcss %}
+    <!-- bootstrap -->
+    <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/static/css/compiled/tables.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+        label{
+            display: inline-block;
+    float: left;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: auto;
+    width: 25%;
+    margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+<li>
+{% endblock %}
+
+
+{% block hardware %}
+<li class = "active">
+    <div class="pointer">
+        <div class="arrow"></div>
+        <div class="arrow_border"></div>
+    </div>
+{% endblock %}
+
+
+{% block hardblock %}
+    style = "display:block;"
+{% endblock %}
+
+{% block container %}
+
+
+
+{% endblock %}
+
+
+{% block addjs %}
+    <script src="/static/js/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/theme.js"></script>
+    <script>
+
+
+    var all_url = "http://{{ request.get_host }}/";
+    //删除设备
+        function del(id){
+    $.ajax(
+            {
+                type:"post",
+                url:all_url+"hardware/delserver/",
+                data:{"id":id},
+                success:function(data){
+                    if(data["statue"] == "success"){
+                        window.location.reload()
+                    }
+                },
+                error:function(err){
+                    console.log(err)
+                }
+            }
+    )
+}
+
+    //动态获取设备信息
+    function getdata(id){
+            var len = id.length;  //获取id字符串长度
+            console.log(len);
+            var txt=id.substr(2,len);  //通过字符串处理获取硬件设备在数据库中真是的id
+            //alert(txt);
+
+            $.ajax(
+                    {
+                        type:"post",
+                        url:all_url+"/hardware/getdata/"+txt+"/",
+                        data:{"id":txt},
+                        success:function(data){
+                            if(data["statue"] == "success"){
+
+                                alert("更新成功");
+                                window.location.reload();
+                            }
+                            else if(data["statue"]== "no need to update"){
+
+                                alert("已是最新");
+                            }
+                            else{
+                                alert(data["statue"]);
+                            }
+                        },
+                        error:function(err){
+                            alert("bbb");
+                            console.log(err)
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            )
+    }
+
+
+
+    </script>
+
+{% endblock %}

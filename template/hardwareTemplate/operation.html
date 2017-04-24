@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block css %}{% endblock %}
+
+{% block addcss %}
+    <!-- bootstrap -->
+    <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/static/css/compiled/tables.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+        label{
+            display: inline-block;
+    float: left;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: auto;
+    width: 25%;
+    margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block index %}
+<li>
+{% endblock %}
+
+
+{% block hardware %}
+<li class = "active">
+    <div class="pointer">
+        <div class="arrow"></div>
+        <div class="arrow_border"></div>
+    </div>
+{% endblock %}
+
+
+{% block hardblock %}
+    style = "display:block;"
+{% endblock %}
+
+{% block container %}
+
+
+        <div class="container-fluid">
+            <div id="pad-wrapper">
+
+                <!-- products table-->
+                <!-- the script for the toggle all checkboxes from header is located in js/theme.js -->
+                <div class="table-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4>服务器远程管理</h4>
+                        </div>
+                    </div>
+<!--
+                    <div class="row-fluid filter-block">
+                        <div class="pull-right">
+                            <div class="ui-select">
+                                <select>
+                                  <option />Filter users
+                                  <option />Signed last 30 days
+                                  <option />Active users
+                                </select>
+                            </div>
+                            <input type="text" class="search" />
+                            <a class="btn-flat success new-product" href="/hardware/addserver/">+ 新增服务器</a>
+                        </div>
+                    </div>
+-->
+                    <div class="row-fluid">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+
+                                    <th class="span3">
+                                        <input type="checkbox" />
+                                        主机名
+                                    </th>
+                                    <th class="span3">
+                                        <span class="line"></span>应用服务
+                                    </th>
+                                    <th class="span3">
+                                        <span class="line"></span>操作
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                                <!--读取后台传递过来的硬件信息-->
+                                {% for server in S %}
+
+                                    {% for control in C %}
+                                           <tr>
+                                    <td class = "description">
+                                        <input type="checkbox" />
+                                        {{ server.hostname }}
+                                    </td>
+
+                                         <td class="description">
+                                            {{ control.sname }}
+                                        </td>
+                                        <td>
+                                            <ul class="actions" style="float:left;">
+                                                <li><a  href="#" id ="{{ control.sname }}_{{ server.id }}_start" onclick="start(this.id)">启动</a></li>
+                                                <li class="last"><a href="#" id ="{{ control.sname }}_{{ server.id }}_stop" onclick="stop(this.id)" >停止</a></li>
+                                                <li class="last"><a href="#" id ="{{ control.sname }}_{{ server.id }}_restart" onclick="restart(this.id)"  >重启</a></li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endfor %}
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end products table -->
+
+
+            </div>
+        </div>
+{% endblock %}
+
+
+{% block addjs %}
+    <script src="/static/js/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/theme.js"></script>
+    <script src="/static/js/myajax.js"></script>
+    <script>
+
+
+
+
+                    var all_url = "http://{{ request.get_host }}/";
+                    //启动服务
+                    function start(id){
+                        var arr = id.split("_")
+                        var sid = arr[1]
+                        var Sid = "#"+sid
+                        var sname = arr[0];
+                        var command = arr[2]
+                        var url = all_url+"hardware/operation/"+sid+"/start"
+                        myAjax(
+                                url,
+                                {"command":command,"server":sname},
+                                function(data){
+                                    var result = data["statue"]
+                                    console.log(result)
+                                    if (result == "Nothing")
+                                    {alert("服务启动失败，请检查是否已启动")}
+                                    else if (result.indexOf("SUCCESS")!=-1)
+                                    {alert("服务已启动")}
+                                    else
+                                    {alert(result)}
+                                },
+                                function(error){
+                                    console.log(error);
+                                }
+
+                        );
+                        //alert(url);
+
+                    };
+
+
+                    //停止服务
+                    function stop(id){
+                        var arr = id.split("_")
+                        var sid = arr[1]
+                        var Sid = "#"+sid
+                        var sname = arr[0];
+                        var command = arr[2]
+                        var url = all_url+"hardware/operation/"+sid+"/stop"
+                        myAjax(
+                                url,
+                                {"command":command,"server":sname},
+                                function(data){
+                                    var result = data["statue"]
+                                    console.log(result)
+                                    if (result == "Nothing")
+                                    {alert("服务关闭失败，请检查是否已关闭")}
+                                    else if (result.indexOf("SUCCESS")!=-1)
+                                    {alert("服务已关闭")}
+                                    else
+                                    {alert(result)}
+                                },
+                                function(error){
+                                    console.log(error);
+                                }
+
+                        );
+                        //alert(url);
+
+                    };
+
+
+
+                    //重启服务
+                    function restart(id){
+                        var arr = id.split("_")
+                        var sid = arr[1]
+                        var Sid = "#"+sid
+                        var sname = arr[0];
+                        var command = arr[2]
+                        var url = all_url+"hardware/operation/"+sid+"/restart"
+                        myAjax(
+                                url,
+                                {"command":command,"server":sname},
+                                function(data){
+                                    var result = data["statue"]
+                                    console.log(result)
+                                    if (result == "Nothing")
+                                    {alert("服务重启失败")}
+                                    else if (result.indexOf("SUCCESS")!=-1)
+                                    {alert("服务已重启")}
+                                    else
+                                    {alert(result)}
+                                },
+                                function(error){
+                                    console.log(error);
+                                }
+
+                        );
+                        //alert(url);
+
+                    };
+
+    $("#submit").click(
+                      function(){
+                        var url = all_url+"hardware/doCommand/";
+                        var command = $("#command").val();
+                        if(command){
+                            myAjax(
+                                url,
+                                {"command":command},
+                                function(data){
+                                    console.log(data);
+                                    $("#result").text(data["result"])
+                                    for(var res in data["result"]){
+                                        var results = data["result"][res].replace("[01;34m","")
+                                        console.log(results)
+                                    }
+                                },
+                                function(error){
+                                    console.log(error);
+                                }
+                            );
+                        }
+                      }
+                    );
+
+
+
+    </script>
+
+{% endblock %}

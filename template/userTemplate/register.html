@@ -125,6 +125,7 @@
                     }
 
 
+                    var Url = "http://{{ request.get_host }}"+"/user/userValid/"
 
                     //验证用户名是否重复，使用ajax请求
                     $("#username").blur(
@@ -134,7 +135,7 @@
 
                                     $.ajax(
                                             {
-                                                url:"http://127.0.0.1:8000/user/userValid",
+                                                url:Url,
                                                 type:"post",
                                                 data:{"user":username},
                                                 beforeSend:function(){},

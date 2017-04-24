@@ -1,5 +1,42 @@
 {% extends "base.html" %}
 
+{% block css %}{% endblock %}
+
+{% block addcss %}
+    <!-- bootstrap -->
+    <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/static/css/compiled/tables.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+
+
+    <style>
+        label{
+            display: inline-block;
+    float: left;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: auto;
+    width: 25%;
+    margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+
+
 {% block index %}
 <li >
 {% endblock %}
@@ -10,4 +47,124 @@
         <div class="arrow"></div>
         <div class="arrow_border"></div>
     </div>
+{% endblock %}
+
+{% block container %}
+    <div class="container-fluid">
+            <div class='span12' id="pad-wrapper">
+
+                <!-- products table-->
+                <!-- the script for the toggle all checkboxes from header is located in js/theme.js -->
+                <div class="able-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4>API接口管理</h4>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="icon-lightbulb "></i>
+                        <strong>展示提供的API接口</strong>
+
+                    </div>
+
+                    <!-- orders table -->
+                <div class="table-wrapper orders-table section">
+
+
+
+
+                    <div class="row-fluid">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="span2">
+                                        接口名称
+                                    </th>
+                                    <th class="span3">
+                                        描述
+                                    </th>
+                                    <th class="span3">
+                                        <span class="line"></span>
+                                        url
+                                    </th>
+                                    <th class="span3">
+                                        <span class="line"></span>
+                                        请求类型
+                                    </th>
+                                    <th class="span3">
+                                        <span class="line"></span>
+                                        请求数据
+                                    </th>
+                                    <th class="span3">
+                                        <span class="line"></span>
+                                        备注
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- row -->
+                                <tr class="first">
+                                    <td>
+                                        <a href="#">新增硬件设备信息</a>
+                                    </td>
+                                    <td>
+                                        管理的硬件设备直接通过该接口上传设备信息到数据库
+                                    </td>
+                                    <td>
+                                        <a href="#">http://127.0.0.1:8000/hardware/savedata/</a>
+                                    </td>
+                                    <td>
+                                        <span class="label label-success">POST</span>
+                                    </td>
+                                    <td>
+                                        略
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="#">更新硬件设备信息</a>
+                                    </td>
+                                    <td>
+                                        主动请求接口调用硬件设备上的脚本采集最新信息更新到数据库
+                                    </td>
+                                    <td>
+                                        <a href="#">http://127.0.0.1:8000/hardware/updatedata/sid/ </a>
+                                    </td>
+                                    <td>
+                                        <span class="label label-success">POST</span>
+                                    </td>
+                                    <td>
+                                        略
+                                    </td>
+                                    <td>
+                                        url中的sid为该设备在数据表Hardware_Servers表中的id
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end orders table -->
+
+                </div>
+                <!-- end products table -->
+
+
+
+
+            </div>
+{% endblock %}
+
+
+{% block addjs %}
+    <script src="/static/js/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/theme.js"></script>
+
+
 {% endblock %}

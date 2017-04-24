@@ -64,6 +64,37 @@ class MyClient:
                 return result
         return result
 
+    def controlserver(self,sid,server,operation):
+        self.sid = sid
+        self.server = server
+        self.operation = operation
+        result = ''
+        if server == "mysql" :
+            command = "service mysqld "
+        else:
+            pass
+        if operation == "start":
+            add = "start"
+        elif operation == "stop":
+            add = "stop"
+        else:
+            add = "restart"
+        command =command+add+"\n"
+        while True:
+            try:
+                recvdata = self.channel.recv(99999)
+                if "Last login" in recvdata:
+                    self.channel.send(command)
+                else:
+                    pass
+            except Exception as ee:
+                if len(recvdata) == 0:
+                    result = "error"
+                else:
+                    result = recvdata
+                return result
+        return result
+
 
 
 

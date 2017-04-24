@@ -87,7 +87,7 @@
 
 
 
-
+            var Url = "http://{{ request.get_host }}"+"/user/userLogin/"
 
 
                 //判断用户名是否存在,使用ajax请求
@@ -98,7 +98,7 @@
 
                                     $.ajax(
                                             {
-                                                url:"http://127.0.0.1:8000/user/userLogin/",
+                                                url:Url,
                                                 type:"post",
                                                 data:{"user":username},
                                                 beforeSend:function(){},

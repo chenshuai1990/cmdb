@@ -6,6 +6,7 @@ import peewee
 
 @user_valid
 def index(request):
+    username = request.COOKIES["username"]
     return render_to_response('apiTemplate/api.html',locals())
 
 
